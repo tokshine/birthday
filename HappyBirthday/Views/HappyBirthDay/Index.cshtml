@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model HappyBirthday.Models.ProfileViewModel
+
+
+
+
+<div id="uploadModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="uploadModalContent"></div>
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="row">
+        
+        <div class="col-md8">
+
+            <h2>
+                Lets remember your birthday...
+            </h2>
+
+            @using (Html.BeginForm("Save", "HappyBirthDay", FormMethod.Post, new { id = "addProject", @class = "form-horizontal" }))
+            {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TelephoneNumber, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.TelephoneNumber, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.TelephoneNumber, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="row">
+                    @Html.LabelFor(model => model.SelectedDay, htmlAttributes: new { @class = "control-label" })
+
+                    @Html.DropDownListFor(model => model.SelectedDay, Model.Days, "--Select--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SelectedDay, "", new { @class = "text-danger" })
+                    <br />
+                    @Html.LabelFor(model => model.SelectedMonth, htmlAttributes: new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.SelectedMonth, Model.Months, "--Select--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SelectedMonth, "", new { @class = "text-danger" })
+                    <br />
+                </div>
+
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-info pull-left">Save </button>
+                </div>
+            }
+
+        </div>
+
+
+        <div class="col-md-4" id="logoFrame">
+            @{ Html.RenderAction("UploadWindow", "HappyBirthDay");}
+        </div>
+
+    </div>
+
+

@@ -1,0 +1,81 @@
+﻿@model HappyBirthday.Models.ProfileImage
+
+
+
+@{ var logo = Model; }
+@if (logo.ImageAvailable)
+{
+
+    <div style="padding: 10px;">
+        <img src="@logo.ImageScr" id="@logo.Id" alt="@logo.AlternateText"  width="300" height="300"/>
+        <span style="color:red">Dimensions 300 px x 300 px</span>
+    </div>
+
+}
+
+<div class="form-group">
+    @if (string.IsNullOrEmpty(logo.ImageScr))
+    {
+      
+        <div class="col-md-2">
+
+            @Html.ActionLink("Upload image", "SelectSaveLogo", "HappyBirthDay",
+                 null,
+                 new { @class = "btn btn-info btn", data_modal = "upload" })
+        </div>
+    }
+    <div class="col-md-2">
+        @if ( logo.ImageAvailable)
+        {
+            <button type="button" class="btn btn btn-danger delete" id="@logo.Id"><span class="glyphicon glyphicon-trash"></span>Remove image</button>
+        }
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    $("a[data-modal=upload]").on("click", function (e) {
+        e.preventDefault();
+
+        $("#uploadModalContent").load(this.href, function () {
+            $("#uploadModal").modal({ keyboard: true }, "show");
+            $("#logochoice").submit(function () {                
+                if ($("#logochoice").length >0 ) {
+                 
+                    var formData = new FormData();
+                    var file = document.getElementById("logo").files[0];
+                    formData.append("logo", file);
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+
+                            if (result.success) {
+                              
+                                $("#uploadModal").modal("hide");
+                                $('#logoFrame').load(result.url);
+                            } else {
+                                    $("#MessageToClient").html(result.StatusDescription);
+                            }
+                        },
+                        error: function () {
+                            alert("Upload failed,image size not supported");
+                            $("#MessageToClient").text("");
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+    });
+    $("button.delete").on("click", function() {
+        var url = '@Url.Action("DeleteLogo", "HappyBirthDay")';
+        $.post(url, { id: $(this).attr('id') }, function(data) {
+            $("#logoFrame").html(data);
+        });
+    });
+</script>
